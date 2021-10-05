@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\CategoryController as ApiCategoryController;
 use App\Http\Controllers\API\ProductController as ApiProductController;
 use Illuminate\Http\Request;
@@ -16,15 +17,15 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-//Route::post('register', []);
+Route::post('register', [AuthController::class, 'register']);
 
-//Route::post('login', []);
+Route::post('authorize', [AuthController::class, 'authorizeUser']);
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::group(['prefix' => 'catalog'], function () {
+Route::group(['prefix' => 'catalog', 'middleware' => ['auth:sanctum']], function () {
     Route::get('categories', [ApiCategoryController::class, 'index']);
 
     Route::get('categories/{slug}', [ApiProductController::class, 'listByCategory']);
