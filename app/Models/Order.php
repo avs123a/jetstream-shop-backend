@@ -13,8 +13,15 @@ class Order extends Model
     const STATUS_NEW = 1;
     const STATUS_COMPLETED = 2;
 
+    protected $fillable = ['user_id', 'status'];
+
     public function user()
     {
         return $this->hasOne(User::class);
+    }
+
+    public function products()
+    {
+        return $this->hasMany(OrderItem::class);
     }
 }

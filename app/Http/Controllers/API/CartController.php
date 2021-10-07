@@ -4,7 +4,9 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
+use App\Models\OrderItem;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class CartController extends Controller
@@ -13,22 +15,37 @@ class CartController extends Controller
     {
         $user = $request->user();
         // TODO get user ID from AUTH SSTEM !!!
-//        Validator::make($request->all(), [
-////            'user_id' => ['required', 'string'],
-//            'slug' => ['required', 'string'],
-//            'description' => ['nullable', 'string'],
-//            'category_id' => ['required', 'integer', 'exists:categories,id'],
-//            'price' => ['required', 'regex:/^\d+(\.\d{1,2})?$/'],
-//            'enabled' => ['nullable', 'integer', 'in:0,1'],
-//        ])->validate();
+        $validator = Validator::make($request->all(), [
+            'items' => ['required', 'array', 'min:1'],
+            'items.*.product_id' => ['required', 'exists:products,id'],
+            'items.*.quantity' => ['required', 'integer', 'min:1'],
+        ])->validate();
 
-//        $order = Order::create([
-//            ''
-//        ])
+        if ($validator->failed()) {
+            return response()->json(['error' => $validator->errors()], 400);
+        }
 
-//        if (!$order) return response()->json(['error' => 'Order was not created.'], 500);
+        DB::beginTransaction();
 
+        try {
+            $order = Order::create(['user_id' => $user->id]);
 
+            if (!$order) throw new \Exception('Order was not created.');
 
+            foreach ( $request->get('items') as $item ) {
+                OrderItem::create([
+                    'order_id' => $order->id,
+                    'product_id' => $item['product_id'],
+                    'quantity' => $item['quantity'],
+                ]);
+            }
+
+        } catch (\Exception $exception) {
+            DB::rollBack();
+
+            return response()->json(['error' => $exception->getMessage()], 500);
+        }
+
+        return response()->json(['message' => 'Order was created successfully']);
     }
 }

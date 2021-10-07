@@ -48,6 +48,7 @@ class ProductController extends Controller
         return response()->json(['product' => $product]);
     }
 
+
     private function getProducts(Request $request, $category_id = null)
     {
         $key = $request->has('search') ? $request->get('search') : null;

@@ -11,6 +11,8 @@ class OrderItem extends Model
 
     public $timestamps = false;
 
+    protected $fillable = ['order_id', 'product_id', 'quantity'];
+
     public function order()
     {
         return $this->hasOne(Order::class);

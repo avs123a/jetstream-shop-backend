@@ -140,9 +140,6 @@ export default {
     methods: {
         openModal: function () {
             this.isOpen = true;
-
-            console.log('this.categories: ', this.categories);
-            console.log('this.categories.links: ', this.categories.links);
         },
         closeModal: function () {
             this.isOpen = false;
