@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
+use App\Http\Controllers\Shop\CatalogController as ShopCatalogController;
+use App\Http\Controllers\Shop\OrderController as ShopOrderController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -18,6 +20,7 @@ use Inertia\Inertia;
 */
 
 Route::get('/', function () {
+//    TODO replace to homepage !!!
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
@@ -25,6 +28,24 @@ Route::get('/', function () {
         'phpVersion' => PHP_VERSION,
     ]);
 });
+
+Route::get('home', function () {
+    return Inertia::render('Frontend/Home', []);
+});
+
+Route::group(['prefix' => 'shop'], function () {
+   Route::get('/', [ShopCatalogController::class, 'index']);
+
+   Route::get('/{slug}', [ShopCatalogController::class, 'details']);
+
+});
+
+Route::group(['prefix' => 'cart'], function () {
+    Route::get('/', [ShopOrderController::class, 'index']);
+
+    Route::get('/checkout', [ShopOrderController::class, 'checkout']);
+});
+
 
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
     return Inertia::render('Dashboard');

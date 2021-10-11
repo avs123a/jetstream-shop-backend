@@ -31,12 +31,13 @@
                         <tbody>
                         <tr v-for="row in orders.data">
                             <td class="border px-4 py-2">{{ row.id }}</td>
-                            <td class="border px-4 py-2">{{ row.title }}</td>
-                            <td class="border px-4 py-2">{{ row.slug }}</td>
-                            <td class="border px-4 py-2">{{ row.enabled }}</td>
+                            <td class="border px-4 py-2">{{ row.user_name }}</td>
+                            <td class="border px-4 py-2">{{ row.created_at }}</td>
+                            <td class="border px-4 py-2">{{ row.updated_at }}</td>
+                            <td class="border px-4 py-2">{{ row.status }}</td>
                             <td class="border px-4 py-2">
-                                <button @click="edit(row)" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Edit</button>
-                                <button @click="deleteRow(row)" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Delete</button>
+<!--                                <button @click="edit(row)" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Edit</button>-->
+                                <button @click="deleteById(row.id)" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Delete</button>
                             </td>
                         </tr>
                         </tbody>
@@ -86,13 +87,21 @@ export default {
         //     this.reset();
         //     this.closeModal();
         // },
-        // deleteRow: function (data) {
-        //     if (!confirm('Are you sure want to remove?')) return;
-        //     data._method = 'DELETE';
-        //     this.$inertia.post('categories/' + data.id, data)
-        //     this.reset();
-        //     this.closeModal();
-        // }
+        finishById: function (orderId) {
+            if (!confirm('Are you sure want to finish?')) return;
+            data._method = 'PUT';
+            this.$inertia.post('orders/' + orderId, {status: 2})
+        },
+        cancelById: function (orderId) {
+            if (!confirm('Are you sure want to cancel?')) return;
+            data._method = 'PUT';
+            this.$inertia.post('orders/' + orderId, {status: 0})
+        },
+        deleteById: function (orderId) {
+            if (!confirm('Are you sure want to remove?')) return;
+            data._method = 'DELETE';
+            this.$inertia.post('orders/' + orderId, {})
+        }
     }
 }
 </script>
