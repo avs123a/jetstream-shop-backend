@@ -241,9 +241,9 @@ export default {
         Layout
 
     },
-    props: [],
+    props: ['base_url'],
     data() {
-
+        console.log('CATALOG DATA');
     }
 }
 </script>

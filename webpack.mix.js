@@ -18,6 +18,8 @@ mix.js('resources/js/app.js', 'public/js').vue()
     ])
     .webpackConfig(require('./webpack.config'));
 
+mix.copyDirectory('resources/frontend_assets', 'public/frontend_assets');
+
 mix.setResourceRoot('/ustora-shop/public/'); // TODO remove or change dependent on site URL !!!
 
 if (mix.inProduction()) {

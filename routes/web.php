@@ -76,3 +76,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:sanctum', 'verified']]
 
 
 });
+
+
+Route::get('test', function () {
+    dd(config('app.url'));
+});

@@ -200,25 +200,41 @@
 </template>
 
 <script>
+import { computed } from 'vue'
+import {usePage} from "@inertiajs/inertia-vue3";
+
 export default {
     name: "Layout",
 
+    setup() {
+        // const appUrl = computed(() => usePage().props.base_url);
+        // TODO change URL below !!!
+        const appUrl = 'http://localhost/ustora-shop/public';
+        return { appUrl }
+    },
+
     mounted() {
+        // TODO change URL below !!!
+        const appUrl = 'http://localhost/ustora-shop/public';
+
+        console.log('this: ', this);
+        console.log('this.appUrl: ', this.appUrl);
+
         const dirs = [
             'https://code.jquery.com/jquery.min.js',
             'http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js',
-            '../../../frontend_assets/js/owl.carousel.min.js',
-            '../../../frontend_assets/js/jquery.sticky.js',
-            '../../../frontend_assets/js/jquery.easing.1.3.min.js',
-            '../../../frontend_assets/js/main.js',
-            '../../../frontend_assets/js/bxslider.min.js',
-            '../../../frontend_assets/js/script.slider.js',
+            appUrl + '/frontend_assets/js/owl.carousel.min.js',
+            appUrl + '/frontend_assets/js/jquery.sticky.js',
+            appUrl + '/frontend_assets/js/jquery.easing.1.3.min.js',
+            appUrl + '/frontend_assets/js/main.js',
+            appUrl + '/frontend_assets/js/bxslider.min.js',
+            appUrl + '/frontend_assets/js/script.slider.js',
         ]
 
         for (const dir of dirs) {
             let jsScript = document.createElement('script')
             jsScript.setAttribute('src', dir)
-            document.head.appendChild(jsScript)
+            document.body.appendChild(jsScript)
         }
     },
 

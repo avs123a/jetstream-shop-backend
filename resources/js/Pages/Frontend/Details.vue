@@ -268,7 +268,7 @@ export default {
         Layout
 
     },
-    props: [],
+    props: ['base_url'],
     data() {
 
     }
