@@ -11,7 +11,7 @@ class CategoryController extends Controller
 {
     public function index() {
         $categories = Cache::rememberForever('enabled_categories', function () {
-            return Category::select('id', 'title')->where('enabled', 1)->get()->toArray();
+            return Category::select('slug', 'title')->where('enabled', 1)->get()->toArray();
         });
 
         return response()->json(['categories' => $categories]);

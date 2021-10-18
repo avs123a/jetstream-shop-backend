@@ -29,24 +29,6 @@ Route::get('/', function () {
     ]);
 });
 
-Route::get('home', function () {
-    return Inertia::render('Frontend/Home', []);
-});
-
-Route::group(['prefix' => 'shop'], function () {
-   Route::get('/', [ShopCatalogController::class, 'index']);
-
-   Route::get('/{slug}', [ShopCatalogController::class, 'details']);
-
-});
-
-Route::group(['prefix' => 'cart'], function () {
-    Route::get('/', [ShopOrderController::class, 'index']);
-
-    Route::get('/checkout', [ShopOrderController::class, 'checkout']);
-});
-
-
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->name('dashboard');

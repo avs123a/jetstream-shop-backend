@@ -8,18 +8,26 @@ use App\Models\OrderItem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
 
 class CartController extends Controller
 {
     public function createOrder(Request $request)
     {
         $user = $request->user();
-        // TODO get user ID from AUTH SSTEM !!!
-        $validator = Validator::make($request->all(), [
-            'items' => ['required', 'array', 'min:1'],
-            'items.*.product_id' => ['required', 'exists:products,id'],
-            'items.*.quantity' => ['required', 'integer', 'min:1'],
-        ])->validate();
+
+//         TODO fix validation !!!
+        try {
+            $validator = Validator::make($request->all(), [
+                'items' => ['required', 'array', 'min:1'],
+                'items.*.product_id' => ['required', 'exists:products,id'],
+                'items.*.quantity' => ['required', 'integer', 'min:1'],
+            ])->validate();
+        } catch (ValidationException $e) {
+            dd($e);
+        }
+
+        dd($validator->failed);
 
         if ($validator->failed()) {
             return response()->json(['error' => $validator->errors()], 400);

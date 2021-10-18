@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
@@ -31,7 +32,7 @@ class ProductController extends Controller
 
         if (!$category) return response()->json(['error' => 'Category not found.'], 404);
 
-        return response()->json(['products' => $this->getProducts($request, $category)]);
+        return response()->json(['products' => $this->getProducts($request, $category->id)]);
     }
 
     /**
@@ -41,7 +42,7 @@ class ProductController extends Controller
      */
     public function show($slug)
     {
-        $product = Product::find($slug);
+        $product = Product::where('slug', $slug)->first();
 
         if (!$product) return response()->json(['error' => 'Product not found.'], 404);
 
@@ -55,10 +56,13 @@ class ProductController extends Controller
         $sort_by = $request->has('sort_by') ? $request->get('sort_by') : null;
         $sort_order = $request->has('sort_order') ? $request->get('sort_order') : 'ASC';
 
-        $products = $category_id ? Product::where([
-            ['enabled', '=', 1],
-            ['category_id', '=', $category_id],
-        ]) : Product::where('enabled', 1);
+        $products = DB::table('products')->select('products.title as title', 'products.slug', 'categories.title as category', 'price', 'image_url')->join('categories', 'products.category_id', '=', 'categories.id');
+
+        $products = $category_id ? $products->where([
+            ['products.enabled', '=', 1],
+            ['categories.id', '=', $category_id],
+        ]) : DB::table('products')->where('products.enabled', 1);
+
         if ($key) {
             $products = $products->where(function ($query) use ($key) {
                 $query->where('title', 'like', "%$key%")

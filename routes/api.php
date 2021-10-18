@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\API\AuthController;
+use App\Http\Controllers\API\CartController as ApiCartController;
 use App\Http\Controllers\API\CategoryController as ApiCategoryController;
 use App\Http\Controllers\API\ProductController as ApiProductController;
 use Illuminate\Http\Request;
@@ -25,12 +26,18 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::group(['prefix' => 'catalog', 'middleware' => ['auth:sanctum']], function () {
-    Route::get('categories', [ApiCategoryController::class, 'index']);
+Route::group(['middleware' => ['auth:sanctum']], function () {
+    Route::group(['prefix' => 'catalog'], function () {
+        Route::get('categories', [ApiCategoryController::class, 'index']);
 
-    Route::get('categories/{slug}', [ApiProductController::class, 'listByCategory']);
+        Route::get('categories/{slug}', [ApiProductController::class, 'listByCategory']);
 
-    Route::get('products', [ApiProductController::class, 'index']);
+        Route::get('products', [ApiProductController::class, 'index']);
 
-    Route::get('products/{slug}', [ApiProductController::class, 'show']);
+        Route::get('products/{slug}', [ApiProductController::class, 'show']);
+    });
+
+    Route::post('checkout', [ApiCartController::class, 'createOrder']);
 });
+
+//CartController

@@ -14,7 +14,7 @@ class Category extends Model
 
     public function parentCategory()
     {
-        return $this->hasOne(self::class, 'user_id', 'id');
+        return $this->hasOne(self::class, 'parent_id', 'id');
     }
 
     /**
